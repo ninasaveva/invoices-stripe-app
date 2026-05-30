@@ -25,7 +25,7 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) {
+    public ResponseEntity<Invoice> createInvoice(@RequestBody Invoice invoice) throws Exception {
         return ResponseEntity.ok(invoiceService.saveInvoice(invoice));
     }
 

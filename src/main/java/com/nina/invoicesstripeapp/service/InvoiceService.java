@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final StripeService stripeService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -23,10 +25,14 @@ public class InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
     }
 
-    public Invoice saveInvoice(Invoice invoice) {
+    public Invoice saveInvoice(Invoice invoice) throws Exception {
         invoice.setCreatedAt(LocalDateTime.now());
         invoice.setStatus(InvoicesStatus.PENDING);
-        return invoiceRepository.save(invoice);
+        invoice.setPaymentToken(UUID.randomUUID().toString());
+        Invoice saved = invoiceRepository.save(invoice);
+        String paymentUrl = stripeService.createCheckoutSession(saved);
+        saved.setStripePaymentUrl(paymentUrl);
+        return invoiceRepository.save(saved);
     }
 
     public Invoice markAsPaid(Long id) {

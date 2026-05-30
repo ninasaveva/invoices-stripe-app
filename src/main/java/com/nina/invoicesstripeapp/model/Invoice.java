@@ -30,9 +30,13 @@ public class Invoice {
     private LocalDateTime createdAt;
     private LocalDateTime paidAt;
 
+    @Column(length = 500)
     private String stripePaymentUrl;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @Column(unique = true)
+    private String paymentToken;
 }
