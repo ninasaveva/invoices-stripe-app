@@ -1,4 +1,4 @@
-#Invoices-Stripe App
+Invoices-Stripe App
 
 Апликација за креирање, управување и плаќање фактури со интеграција со Stripe.
 
